@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+<head>
+    <meta charset="UTF-8">
+    <title>Places</title>
+</head>
+<body>
+
+<p>Hello to places</p>
+<table>
+  <thead>
+  <th>ID</th>
+  <th>Name</th>
+  </thead>
+  <table>
+    <tr th:each="place:${places}">
+      <td>[[${place.id}]]</td>
+      <td>[[${place.name}]]</td>
+    </tr>
+  </table>
+</table>
+
+</body>
+</html>
