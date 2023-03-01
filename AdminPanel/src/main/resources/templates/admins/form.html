@@ -8,97 +8,109 @@
 <div th:replace="fragments/preloader::preloader"></div>
 <!-- Pre-loader end -->
 <div id="pcoded" class="pcoded">
-<div class="pcoded-overlay-box"></div>
-<div class="pcoded-container navbar-wrapper">
+    <div class="pcoded-overlay-box"></div>
+    <div class="pcoded-container navbar-wrapper">
 
-    <nav th:replace="fragments/navbar::navbar"></nav>
+        <nav th:replace="fragments/navbar::navbar"></nav>
 
 
-    <div class="pcoded-main-container">
-        <div class="pcoded-wrapper">
-            <nav th:replace="fragments/sidebar::sidebar"></nav>
-            <div class="pcoded-content">
-                <div class="pcoded-inner-content">
-                    <div class="main-body">
-                        <div class="page-wrapper">
+        <div class="pcoded-main-container">
+            <div class="pcoded-wrapper">
+                <nav th:replace="fragments/sidebar::sidebar"></nav>
+                <div class="pcoded-content">
+                    <div class="pcoded-inner-content">
+                        <div class="main-body">
+                            <div class="page-wrapper">
 
-                            <div class="main-body">
-                                <div class="page-wrapper">
+                                <div class="main-body">
+                                    <div class="page-wrapper">
 
-                                    <div class="page-body">
-                                        <div class="card">
-                                            <div class="card-header">
-                                                <h5>Add Admin</h5>
-                                            </div>
-                                            <div class="card-block">
-                                                <form method="post" th:action="@{/admins/add}" th:object="${admin}"
-                                                      novalidate>
-                                                    <div class="form-group row">
-                                                        <label class="col-sm-2 col-form-label">First Name</label>
-                                                        <div class="col-sm-10">
-                                                            <input type="text" class="form-control"
-                                                                   th:field="*{firstName}"
-                                                                   placeholder="First Name">
-                                                            <span class="messages"></span>
+                                        <div class="page-body">
+                                            <div class="card">
+                                                <div class="card-header">
+                                                    <h5>Add Admin</h5>
+                                                </div>
+                                                <div class="card-block">
+                                                    <form method="post" th:action="@{/admins/save}"
+                                                          th:object="${admin}">
+                                                        <input type="hidden" th:field="*{id}">
+                                                        <div class="form-group row">
+                                                            <label class="col-sm-2 col-form-label">First Name</label>
+                                                            <div class="col-sm-10">
+                                                                <input type="text" class="form-control"
+                                                                       th:field="*{firstName}"
+                                                                       placeholder="First Name">
+                                                                <span class="text-danger error"
+                                                                      th:if="${#fields.hasErrors('firstName')}"
+                                                                      th:errors="*{firstName}">name Error</span>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <div class="form-group row">
-                                                        <label class="col-sm-2 col-form-label">Last Name</label>
-                                                        <div class="col-sm-10">
-                                                            <input type="text" class="form-control"
-                                                                   th:field="*{lastName}"
-                                                                   placeholder="Last Name">
-                                                            <span class="messages"></span>
+                                                        <div class="form-group row">
+                                                            <label class="col-sm-2 col-form-label">Last Name</label>
+                                                            <div class="col-sm-10">
+                                                                <input type="text" class="form-control"
+                                                                       th:field="*{lastName}"
+                                                                       placeholder="Last Name">
+                                                                <span class="text-danger error"
+                                                                      th:if="${#fields.hasErrors('lastName')}"
+                                                                      th:errors="*{lastName}">name Error</span>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <div class="form-group row">
-                                                        <label class="col-sm-2 col-form-label">E-mail</label>
-                                                        <div class="col-sm-10">
-                                                            <input type="email" class="form-control" th:field="*{email}"
-                                                                   placeholder="E-mail">
-                                                            <span class="messages"></span>
+                                                        <div class="form-group row">
+                                                            <label class="col-sm-2 col-form-label">E-mail</label>
+                                                            <div class="col-sm-10">
+                                                                <input type="email" class="form-control"
+                                                                       th:field="*{email}"
+                                                                       placeholder="E-mail">
+                                                                <span class="text-danger error"
+                                                                      th:if="${#fields.hasErrors('email')}"
+                                                                      th:errors="*{email}">name Error</span>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <div class="form-group row">
-                                                        <label class="col-sm-2 col-form-label">Username</label>
-                                                        <div class="col-sm-10">
-                                                            <input type="text" class="form-control"
-                                                                   th:field="*{userName}"
-                                                                   placeholder="Username">
-                                                            <span class="messages"></span>
+                                                        <div class="form-group row">
+                                                            <label class="col-sm-2 col-form-label">Username</label>
+                                                            <div class="col-sm-10">
+                                                                <input type="text" class="form-control"
+                                                                       th:field="*{userName}"
+                                                                       placeholder="Username">
+                                                                <span class="text-danger error"
+                                                                      th:if="${#fields.hasErrors('userName')}"
+                                                                      th:errors="*{userName}">name Error</span>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <div class="form-group row">
-                                                        <label class="col-sm-2 col-form-label">Password</label>
-                                                        <div class="col-sm-10">
-                                                            <input type="password" class="form-control"
-                                                                   th:field="*{password}"
-                                                                   placeholder="Password">
-                                                            <span class="messages"></span>
+                                                        <div class="form-group row">
+                                                            <label class="col-sm-2 col-form-label">Password</label>
+                                                            <div class="col-sm-10">
+                                                                <input type="password" class="form-control"
+                                                                       th:field="*{password}"
+                                                                       placeholder="Password">
+                                                                <span class="text-danger error"
+                                                                      th:if="${#fields.hasErrors('password')}"
+                                                                      th:errors="*{password}">Password Error</span>
+                                                            </div>
                                                         </div>
-                                                    </div>
-
-                                                    <div class="form-group row">
-                                                        <label for="enabled"
-                                                               class="col-sm-2 col-form-label">Enabled</label>
-                                                        <div class="border-checkbox-group border-checkbox-group-primary">
-                                                            <input class="border-checkbox" type="checkbox" id="enabled">
-                                                            <label class="border-checkbox-label" for="enabled"></label>
+                                                        <div class="form-group row">
+                                                            <label for="enabled"
+                                                                   class="col-sm-2 col-form-label">Enabled</label>
+                                                            <div class="border-checkbox-group border-checkbox-group-primary">
+                                                                <input class="border-checkbox" type="checkbox"
+                                                                       id="enabled">
+                                                                <label class="border-checkbox-label"
+                                                                       for="enabled"></label>
+                                                            </div>
                                                         </div>
-                                                    </div>
 
-
-                                                    <div class="form-group row">
-                                                        <label class="col-sm-2 "></label>
-                                                        <div class="col-sm-10">
-                                                            <button type="submit" class="btn btn-primary m-b-0">Submit
-                                                            </button>
+                                                        <div class="form-group row">
+                                                            <label class="col-sm-2 "></label>
+                                                            <div class="col-sm-10">
+                                                                <button type="submit" class="btn btn-primary m-b-0">Submit
+                                                                </button>
+                                                            </div>
                                                         </div>
-                                                    </div>
 
+                                                    </form>
 
-                                                </form>
-
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -108,10 +120,9 @@
                     </div>
                 </div>
             </div>
-        </div>
 
+        </div>
     </div>
-</div>
 </div>
 </body>
 <div th:replace="fragments/footer::footer"></div>

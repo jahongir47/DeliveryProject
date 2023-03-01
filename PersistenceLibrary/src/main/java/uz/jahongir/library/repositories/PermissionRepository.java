@@ -1,10 +1,12 @@
 package uz.jahongir.library.repositories;
 
-import org.springframework.data.repository.CrudRepository;
+
+import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 import uz.jahongir.library.entities.Permission;
-import uz.jahongir.library.entities.Region;
+
 
 @Repository
-public interface PermissionRepository extends CrudRepository<Permission, Long> {
+public interface PermissionRepository extends PagingAndSortingRepository<Permission, Long> {
+    boolean existsByName(String name);
 }

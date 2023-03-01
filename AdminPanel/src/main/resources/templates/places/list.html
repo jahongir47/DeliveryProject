@@ -1,8 +1,7 @@
 ﻿<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="fragments/header::page_head('Regions')"></head>
-<head th:replace="fragments/header::page_head('Regions')"></head>
+<head th:replace="fragments/header::page_head('Places')"></head>
 
 <body>
 <!-- Pre-loader start -->
@@ -26,42 +25,39 @@
 
                                 <div class="card">
                                     <div class="card-header">
-                                        <h5>Admins</h5>
+                                        <h5>Places</h5>
 
-                                        <a th:href="@{admins/create}"
+                                        <a th:href="@{places/create}"
                                            class="btn btn-primary waves-effect waves-light f-right d-inline-block md-trigger">
-                                            <i class="icofont icofont-plus m-r-5"></i>Add Admin
+                                            <i class="icofont icofont-plus m-r-5"></i>Add Place
                                         </a>
 
                                     </div>
-                                    <div class="card-block table-border-style">
+                                    <div class="card-block">
                                         <div class="table-responsive">
-                                            <table class="table table-hover">
+                                            <table class="table table-hover table-bordered table-striped">
                                                 <thead>
                                                 <tr>
                                                     <th>Id</th>
-                                                    <th>First Name</th>
-                                                    <th>Last Name</th>
-                                                    <th>E-mail </th>
-                                                    <th>Enable</th>
-                                                    <th class="w-px-100">Actions</th>
+                                                    <th>Name</th>
+                                                    <th>Region Name</th>
+                                                    <th>Created At</th>
+                                                    <th>Actions</th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
-                                                <tr th:each="admin: ${admins}">
-                                                    <th scope="row">[[${admin.id}]]</th>
-                                                    <td>[[${admin.firstName}]]</td>
-                                                    <td>[[${admin.lastName}]]</td>
-                                                    <td>[[${admin.email}]]</td>
-                                                    <td>[[${admin.enabled}]]</td>
+                                                <tr th:each="place:${places}">
+                                                    <th scope="row">[[${place.id}]]</th>
+                                                    <td>[[${place.name}]]</td>
+                                                    <td>[[${place.region.name}]]</td>
+                                                    <td>[[${place.createdAt}]]</td>
                                                     <td>
-                                                        <a th:href="@{'/admins/update/'+${admin.id}}"><i
-                                                                class="icofont icofont-edit icofont-lg"></i></a>
-                                                        <a href="javascript:void(0)"
-                                                           th:adminId="${admin.id}"
-                                                           onclick="deleteRow(this)">
-                                                            <i class="icofont icofont-ui-delete icofont-lg"></i>
-                                                        </a>
+                                                        <a th:href="@{'/places/update/'+${place.id}}"><i
+                                                                class="icofont icofont-edit "></i></a>
+                                                        <a href="javascript:void(0)" style="color: #991a0e"
+                                                                th:placeId="${place.id}" type="button"
+                                                                onclick="deleteRow(this)">
+                                                            <i class="icofont icofont-ui-delete"></i></a>
 
                                                     </td>
                                                 </tr>
@@ -101,7 +97,6 @@
                                     </div>
                                 </div>
 
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -109,13 +104,17 @@
             </div>
         </div>
     </div>
+</div>
 
 </body>
 <div th:replace="fragments/footer::footer"></div>
+
 <script>
     function deleteRow(e) {
         var button = $(e);
-        var adminId = button.attr('adminId');
+        console.log(button)
+        console.log(button.attr('placeId'))
+        var placeId = button.attr('placeId');
         swal({
                 title: "Are you sure",
                 text: "Your will not be able to recover this element",
@@ -129,7 +128,7 @@
 
                 if (value) {
                     $.ajax({
-                        'url': '/admin/admins/delete/' + adminId,
+                        'url': '/admin/places/delete/' + placeId,
                         'type': 'GET',
                         'success': function (data) {
                             swal("Deleted", "Your imaginary file has been deleted.", "success");

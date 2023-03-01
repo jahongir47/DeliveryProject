@@ -1,15 +1,16 @@
 package uz.jahongir.admin.controllers;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.validation.Errors;
+import org.springframework.web.bind.annotation.*;
 import uz.jahongir.admin.services.AdminService;
+import uz.jahongir.admin.services.PermissionService;
 import uz.jahongir.library.entities.Admin;
-import uz.jahongir.library.entities.Region;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @Controller
@@ -19,29 +20,55 @@ public class AdminController {
 
   private final AdminService adminService;
 
-    @GetMapping()
-    public String places(Model model){
-        List<Admin> admins= adminService.findAll();
+    @GetMapping
+    public String list(Model model) {
+        return listByPage(1, model);
+    }
 
-        model.addAttribute("admins",admins);
-        System.out.println(model);
+    @GetMapping("/page/{pageNum}")
+    public String listByPage(@PathVariable int pageNum, Model model){
+        Page<Admin> page=adminService.findAllByPage(pageNum);
+        long startCount=(pageNum-1)* 10+1;
+        long endCount=startCount+10-1;
+        long totalCount=page.getTotalElements();
+        if (endCount>totalCount)endCount=totalCount;
+        model.addAttribute( "admins", page);
+        model.addAttribute("startCount",startCount);
+        model.addAttribute("endCount",endCount);
+        model.addAttribute("totalCount",totalCount);
         return "admins/list";
     }
 
-    @GetMapping("/add")
-    public String add(Model model){
-        System.out.println("Keldi 1 ");
-        Admin admin=new Admin();
-        model.addAttribute("admin",admin);
+    @GetMapping("/create")
+    public String create(Model model) {
+        model.addAttribute("admin", new Admin());
         return "admins/form";
     }
+    @GetMapping("/update/{id}")
+    public String update(@PathVariable Long id, Model model) {
+        Admin admin=  adminService.findById(id);
+        model.addAttribute("admin", admin);
+        return "admins/form";
+    }
+    @GetMapping("/delete/{id}")
+    @ResponseBody
+    public Boolean  delete(@PathVariable Long id) {
+        adminService.deleteById(id);
+        return true;
+    }
+    @PostMapping("/save")
+    public String add(@Valid Admin admin, Errors errors){
+        System.out.println("Keldi");
+        if (errors.hasErrors()){
+            System.out.println("Return");
+            return "admins/form";
 
-
-    @PostMapping("/add")
-    public String save(Admin admin, Model model){
-        System.out.println(admin);
+        }
+        System.out.println("1");
         adminService.save(admin);
+        System.out.println("2");
         return "redirect:/admins";
     }
+
 
 }
