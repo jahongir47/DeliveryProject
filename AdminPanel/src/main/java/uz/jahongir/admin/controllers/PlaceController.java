@@ -25,19 +25,33 @@ public class PlaceController {
 
     @GetMapping
     public String list(Model model) {
-        return listByPage(1, model);
+        return listByPage(1,10,"name","asc",null, model);
     }
-    @GetMapping("/page/{pageNum}")
-    public String listByPage(@PathVariable int pageNum, Model model) {
-        Page<Place> page=placeService.findAllByPage(pageNum);
-        long startCount=(pageNum-1)* 10+1;
-        long endCount=startCount+10-1;
+    @GetMapping("/page/{pageNum}/size/{pageSize}")
+    public String listByPage(@PathVariable int pageNum,
+                             @PathVariable int pageSize,
+                             @RequestParam String sortField,
+                             @RequestParam String sortDir,
+                             @RequestParam(required = false) String keyword,
+                             Model model) {
+        System.out.println(keyword);
+        Page<Place> page=placeService.findAllByPage(pageNum,pageSize,sortField,sortDir, keyword);
+        long startCount=(pageNum-1)*pageSize+1;
+        long endCount=startCount+pageSize-1;
         long totalCount=page.getTotalElements();
         if (endCount>totalCount)endCount=totalCount;
         model.addAttribute( "places", page);
         model.addAttribute("startCount",startCount);
         model.addAttribute("endCount",endCount);
         model.addAttribute("totalCount",totalCount);
+        model.addAttribute("totalPages",page.getTotalPages());
+        model.addAttribute("currentPage", pageNum);
+        model.addAttribute("currentSize", pageSize);
+        model.addAttribute("sortField", sortField);
+        model.addAttribute("reverseSortDir", sortDir.equals("asc") ? "desc":"asc");
+        model.addAttribute("sortDir", sortDir);
+        model.addAttribute("keyword", keyword);
+        System.out.println(keyword);
 
         return "places/list";
     }

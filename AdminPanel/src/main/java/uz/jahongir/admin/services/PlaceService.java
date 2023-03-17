@@ -18,5 +18,5 @@ public interface PlaceService {
     Optional<Place> findById(Long id);
 
 
-    Page<Place> findAllByPage(int pageNum);
+    Page<Place> findAllByPage(int pageNum, int pageSize, String sortField, String sortDir, String keyword);
 }

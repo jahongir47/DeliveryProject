@@ -30,35 +30,7 @@
                                         </a>
                                     </div>
                                     <div class="card-block ">
-                                        <div class="row">
-                                            <div class="col-xs-12 col-sm-12 col-sm-12 col-md-6">
-                                                <div class="pagination-page-size-wrapper">
-                                                    <label>Show <select id="page-size-select"
-                                                                        class="form-control input-sm">
-                                                        <option th:selected="${currentSize==10? true:false}" value="10">
-                                                            10
-                                                        </option>
-                                                        <option th:selected="${currentSize==25? true:true}" value="25">
-                                                            25
-                                                        </option>
-                                                        <option th:selected="${currentSize==50? true:true}" value="50">
-                                                            50
-                                                        </option>
-                                                        <option th:selected="${currentSize==100?true:true}" value="100">
-                                                            100
-                                                        </option>
-                                                    </select> entries</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-xs-12 col-sm-12 col-md-6">
-                                                <div id="fix-header_filter" class="pagination-search-wrapper">
-                                                    <label>Search:<input type="search" class="form-control input-sm"
-                                                                         placeholder="" aria-controls="fix-header">
-                                                    </label>
-                                                </div>
-                                            </div>
-                                        </div>
-
+                                        <div th:replace="fragments/fragments::pagination_header(${currentSize}, ${keyword})"></div>
                                         <div class="row">
                                             <div class="col-xs-12 col-sm-12">
                                                 <div class="table-responsive">
@@ -128,17 +100,17 @@
                                                 <div class="dataTables_paginate">
                                                     <ul class="pagination">
                                                         <li th:class="${currentPage>1?'page-item':'page-item disabled'}">
-                                                            <a th:href="@{'/permissions/page/'+${currentPage-1}+'/size/'+${currentSize}+'?sortField='+${sortField}+'&sortDir=' +${sortDir}}"
+                                                            <a th:href="@{'/permissions/page/'+${currentPage-1}+'/size/'+${currentSize}+'?sortField='+${sortField}+'&sortDir=' +${sortDir}+'&keyword=' +${keyword!=null ? '&keyword='+keyword:''}}"
                                                                class="page-link">Previous</a>
                                                         </li>
                                                         <li th:class="${i==currentPage?'page-item active':'page-item'}"
                                                             th:each="i: ${#numbers.sequence(1,totalPages)}">
-                                                            <a th:href="@{'/permissions/page/'+${i}+'/size/'+${currentSize}+'?sortField='+${sortField}+'&sortDir=' +${sortDir}}"
+                                                            <a th:href="@{'/permissions/page/'+${i}+'/size/'+${currentSize}+'?sortField='+${sortField}+'&sortDir=' +${sortDir}+'&keyword=' +${keyword!=null ? '&keyword='+keyword:''}}"
                                                                class="page-link">[[${i}]]</a>
                                                         </li>
 
                                                         <li th:class="${currentPage<totalPages?'page-item':'page-item disabled'}">
-                                                            <a th:href="@{'/permissions/page/'+${currentPage+1}+'/size/'+${currentSize}+'?sortField='+${sortField}+'&sortDir=' +${sortDir}}"
+                                                            <a th:href="@{'/permissions/page/'+${currentPage+1}+'/size/'+${currentSize}+'?sortField='+${sortField}+'&sortDir=' +${sortDir}+'&keyword=' +${keyword!=null ? '&keyword='+keyword:''}}"
                                                                class="page-link">Next</a>
                                                         </li>
                                                     </ul>
@@ -195,9 +167,15 @@
 
     $(document).ready(function () {
         $('#page-size-select').change(function () {
-            document.location = "[[@{/permissions/page/}]][[${currentPage}]]/size/" + $(this).val() + '?sortField=[[${sortField}]]&sortDir=[[${sortDir}]]';
+            document.location = "[[@{/permissions/page/}]][[${currentPage}]]/size/" + $(this).val() + "?sortField=[[${sortField}]]&sortDir=[[${sortDir}]]&sortDir=[[${sortDir}]]&keyword=[[${keyword}]]";
             console.log($(this).val());
         });
+
+        $('body').on('click', "#search-btn", function () {
+            console.log($('#search-input').val())
+            document.location = "[[@{/permissions/page/}]][[${currentPage}]]/size/[[${currentSize}]]?sortField=[[${sortField}]]&sortDir=[[${sortDir}]]&keyword=" + $('#search-input').val();
+        })
+
     });
 </script>
 

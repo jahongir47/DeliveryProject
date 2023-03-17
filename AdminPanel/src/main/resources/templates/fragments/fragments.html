@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+
+<div class="row" th:fragment="pagination_header(currentSize, keyword)">
+    <div class="col-xs-12 col-sm-12 col-sm-12 col-md-6">
+        <div class="pagination-page-size-wrapper">
+            <label>Show <select id="page-size-select"
+                                class="form-control input-sm">
+                <option th:selected="${currentSize==10? true:false}" value="10">
+                    10
+                </option>
+                <option th:selected="${currentSize==25? true:false}" value="25">
+                    25
+                </option>
+                <option th:selected="${currentSize==50? true:false}" value="50">
+                    50
+                </option>
+                <option th:selected="${currentSize==100?true:false}"
+                        value="100">
+                    100
+                </option>
+            </select> entries</label>
+        </div>
+    </div>
+    <div class="col-xs-12 col-sm-12 col-md-6">
+        <div id="fix-header_filter" class="pagination-search-wrapper">
+            <!--                                                  <label>  Search:</label>-->
+            <!--                                                    <div class="input-group input-group-button">-->
+            <!--                                                        <input id="search-input" type="search"-->
+            <!--                                                               class="form-control input-sm"-->
+            <!--                                                               placeholder="" th:value="${keyword}">-->
+            <!--                                                        <span class="input-group-addon btn btn-primary" id="basic-addon10">-->
+            <!--                                                            <span class="">Search</span>-->
+            <!--                                                        </span>-->
+            <!--                                                    </div>-->
+            <label>Search:<input id="search-input" type="search"
+                                 class="form-control input-sm"
+                                 placeholder="" th:value="${keyword}"><button id="search-btn" type="button" class="btn btn-primary"><i class="icofont icofont-ui-search"></i> </button>
+            </label>
+        </div>
+    </div>
+</div>
+
+
+</html>

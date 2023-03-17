@@ -9,7 +9,7 @@ public interface PermissionService {
     Permission save(Permission permission);
 
     List<Permission> findAll();
-    Page<Permission> findAllByPage(int pageNum, int pageSize, String sortField, String sortDir);
+    Page<Permission> findAllByPage(int pageNum, int pageSize, String sortField, String sortDir,String keyword);
 
     Permission findById(Long id);
 

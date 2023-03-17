@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import uz.jahongir.admin.services.PlaceService;
 import uz.jahongir.library.entities.Permission;
@@ -43,9 +44,11 @@ public class PlaceServiceImpl implements PlaceService {
     }
 
     @Override
-    public Page<Place> findAllByPage(int pageNum) {
-        Pageable pageable= PageRequest.of(pageNum-1,PAGE_SIZE);
-        Page<Place> page = placeRepository.findAll(pageable);
+    public Page<Place> findAllByPage(int pageNum, int pageSize, String sortField, String sortDir, String keyword) {
+        Sort sort = Sort.by(sortField);
+        sort = sortDir.equals("asc") ? sort.ascending() : sort.descending();
+        Pageable pageable = PageRequest.of(pageNum - 1, pageSize, sort);
+        Page<Place> page = keyword != null ? placeRepository.findAll(keyword, pageable) : placeRepository.findAll(pageable);
         return page;
     }
 }

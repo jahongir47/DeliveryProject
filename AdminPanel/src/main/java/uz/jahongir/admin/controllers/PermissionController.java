@@ -8,11 +8,8 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import uz.jahongir.admin.services.PermissionService;
 import uz.jahongir.library.entities.Permission;
-import uz.jahongir.library.entities.Region;
-import uz.jahongir.library.repositories.PermissionRepository;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @Controller
 @RequestMapping("/permissions")
@@ -23,7 +20,7 @@ public class PermissionController {
 
     @GetMapping
     public String list(Model model) {
-        return listByPage(1,10,"name","asc", model);
+        return listByPage(1,10,"name","asc",null, model);
     }
 
     @GetMapping("/page/{pageNum}/size/{pageSize}")
@@ -31,16 +28,17 @@ public class PermissionController {
                              @PathVariable int pageSize,
                              @RequestParam String sortField,
                              @RequestParam String sortDir,
+                             @RequestParam(required = false) String keyword,
                              Model model) {
 
         System.out.println(sortField);
         System.out.println(sortDir);
-       Page<Permission>  page=permissionService.findAllByPage(pageNum,pageSize,sortField,sortDir);
+       Page<Permission>  page=permissionService.findAllByPage(pageNum,pageSize,sortField,sortDir, keyword);
         long startCount=(pageNum-1)*pageSize+1;
         long endCount=startCount+pageSize-1;
         long totalCount=page.getTotalElements();
         if (endCount>totalCount)endCount=totalCount;
-        model.addAttribute( "permissions", page);
+        model.addAttribute( "permissions", page.getContent());
         model.addAttribute("startCount",startCount);
         model.addAttribute("endCount",endCount);
         model.addAttribute("totalCount",totalCount);
@@ -48,8 +46,9 @@ public class PermissionController {
         model.addAttribute("currentPage", pageNum);
         model.addAttribute("currentSize", pageSize);
         model.addAttribute("sortField", sortField);
-        model.addAttribute("sortDir", sortDir);
         model.addAttribute("reverseSortDir", sortDir.equals("asc") ? "desc":"asc");
+        model.addAttribute("sortDir", sortDir);
+        model.addAttribute("keyword", keyword);
 
         return "permissions/list";
     }

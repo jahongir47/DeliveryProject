@@ -1,8 +1,8 @@
 ﻿<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="fragments/header::page_head('Regions')"></head>
-<head th:replace="fragments/header::page_head('Regions')"></head>
+<head th:replace="fragments/header::page_head('Admins')"></head>
+<head th:replace="fragments/header::page_head('Admins')"></head>
 
 <body>
 <!-- Pre-loader start -->
@@ -22,85 +22,173 @@
                     <div class="pcoded-inner-content">
                         <div class="main-body">
                             <div class="page-wrapper">
-
-
                                 <div class="card">
                                     <div class="card-header">
-                                        <h5>Admins</h5>
-
+                                        <h5>Permissions</h5>
                                         <a th:href="@{admins/create}"
                                            class="btn btn-primary waves-effect waves-light f-right d-inline-block md-trigger">
-                                            <i class="icofont icofont-plus m-r-5"></i>Add Admin
+                                            <i class="icofont icofont-plus m-r-5"></i>Add Admins
                                         </a>
-
                                     </div>
-                                    <div class="card-block table-border-style">
-                                        <div class="table-responsive">
-                                            <table class="table table-hover">
-                                                <thead>
-                                                <tr>
-                                                    <th>Id</th>
-                                                    <th>First Name</th>
-                                                    <th>Last Name</th>
-                                                    <th>E-mail </th>
-                                                    <th>Enable</th>
-                                                    <th class="w-px-100">Actions</th>
-                                                </tr>
-                                                </thead>
-                                                <tbody>
-                                                <tr th:each="admin: ${admins}">
-                                                    <th scope="row">[[${admin.id}]]</th>
-                                                    <td>[[${admin.firstName}]]</td>
-                                                    <td>[[${admin.lastName}]]</td>
-                                                    <td>[[${admin.email}]]</td>
-                                                    <td>[[${admin.enabled}]]</td>
-                                                    <td>
-                                                        <a th:href="@{'/admins/update/'+${admin.id}}"><i
-                                                                class="icofont icofont-edit icofont-lg"></i></a>
-                                                        <a href="javascript:void(0)"
-                                                           th:adminId="${admin.id}"
-                                                           onclick="deleteRow(this)">
-                                                            <i class="icofont icofont-ui-delete icofont-lg"></i>
-                                                        </a>
-
-                                                    </td>
-                                                </tr>
-
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-xs-12 col-sm-12 col-md-5">
-                                            <div> Showing [[${startCount}]] to [[${endCount}]] of
-                                                [[${totalCount}]] entiries
+                                    <div class="card-block ">
+                                        <div class="row">
+                                            <div class="col-xs-12 col-sm-12 col-sm-12 col-md-6">
+                                                <div class="pagination-page-size-wrapper">
+                                                    <label>Show <select id="page-size-select"
+                                                                        class="form-control input-sm">
+                                                        <option th:selected="${currentSize==10? true:false}" value="10">
+                                                            10
+                                                        </option>
+                                                        <option th:selected="${currentSize==25? true:false}" value="25">
+                                                            25
+                                                        </option>
+                                                        <option th:selected="${currentSize==50? true:false}" value="50">
+                                                            50
+                                                        </option>
+                                                        <option th:selected="${currentSize==100?true:false}"
+                                                                value="100">
+                                                            100
+                                                        </option>
+                                                    </select> entries</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 col-sm-12 col-md-6">
+                                                <div id="fix-header_filter" class="pagination-search-wrapper">
+                                                    <label>Search:<input type="search" class="form-control input-sm"
+                                                                         placeholder="" aria-controls="fix-header">
+                                                    </label>
+                                                </div>
                                             </div>
                                         </div>
-                                        <div class="col-xs-12 col-sm-12 col-md-7">
-                                            <div class="dataTables_paginate">
-                                                <ul class="pagination">
-                                                    <li class=" page-item previous ">
-                                                        <a href="#" class="page-link">Previous</a>
-                                                    </li>
-                                                    <li class="paginate_button page-item active">
-                                                        <a href="#" aria-controls="don-jqry" data-dt-idx="1"
-                                                           tabindex="0" class="page-link">1</a>
-                                                    </li>
-                                                    <li class="paginate_button page_item ">
-                                                        <a href="#" aria-controls="don-jqry" data-dt-idx="2"
-                                                           tabindex="0" class="page-link">2</a>
-                                                    </li>
-                                                    <li class="paginate_button page_item next">
-                                                        <a href="#" aria-controls="don-jqry_next"
-                                                           data-dt-idx="3" tabindex="0"
-                                                           class="page-link">Next</a>
-                                                    </li>
-                                                </ul>
+
+                                        <div class="row">
+                                            <div class="col-xs-12 col-sm-12">
+                                                <div class="table-responsive">
+                                                    <table class="table table-hover table-bordered table-striped pagination-table">
+                                                        <thead>
+                                                        <tr>
+                                                            <th class="w-px-80">
+                                                                <a th:href="@{'/admins/page/'+${currentPage}+'/size/'+${currentSize}+'?sortField=id&sortDir=' +${sortField=='id'?reverseSortDir:sortDir}}">
+                                                                    ID
+                                                                    <div class="pagination-page-dir-wrapper">
+                                                                        <i th:class="${sortField=='id' and sortDir=='asc' ? 'icofont icofont-arrow-up opacity-1':'icofont icofont-arrow-up opacity-03'}"></i>
+                                                                        <i th:class="${sortField=='id' and sortDir=='desc' ? 'icofont icofont-arrow-down opacity-1':'icofont icofont-arrow-down opacity-03'}"></i>
+                                                                    </div>
+                                                                </a>
+                                                            </th>
+                                                            <th class="w-px-80">
+                                                                <a th:href="@{'/admins/page/'+${currentPage}+'/size/'+${currentSize}+'?sortField=id&sortDir=' +${sortField=='id'?reverseSortDir:sortDir}}">
+                                                                    First Name
+                                                                    <div class="pagination-page-dir-wrapper">
+                                                                        <i th:class="${sortField=='firstName' and sortDir=='asc' ? 'icofont icofont-arrow-up opacity-1':'icofont icofont-arrow-up opacity-03'}"></i>
+                                                                        <i th:class="${sortField=='firstName' and sortDir=='desc' ? 'icofont icofont-arrow-down opacity-1':'icofont icofont-arrow-down opacity-03'}"></i>
+                                                                    </div>
+                                                                </a>
+                                                            </th>
+                                                            <th class="w-px-80">
+                                                                <a th:href="@{'/admins/page/'+${currentPage}+'/size/'+${currentSize}+'?sortField=id&sortDir=' +${sortField=='firstName'?reverseSortDir:sortDir}}">
+                                                                    Last Name
+                                                                    <div class="pagination-page-dir-wrapper">
+                                                                        <i th:class="${sortField=='lastName' and sortDir=='asc' ? 'icofont icofont-arrow-up opacity-1':'icofont icofont-arrow-up opacity-03'}"></i>
+                                                                        <i th:class="${sortField=='lastName' and sortDir=='desc' ? 'icofont icofont-arrow-down opacity-1':'icofont icofont-arrow-down opacity-03'}"></i>
+                                                                    </div>
+                                                                </a>
+                                                            </th>
+                                                            <th>
+                                                                <a th:href="@{'/admins/page/'+${currentPage}+'/size/'+${currentSize}+'?sortField=firstName&sortDir='+${sortField=='lastName'?reverseSortDir:sortDir} }">
+                                                                    User Name
+                                                                    <div class="pagination-page-dir-wrapper">
+                                                                        <i th:class="${sortField=='firstName' and sortDir=='asc'?'icofont icofont-arrow-up opacity-1':'icofont icofont-arrow-up opacity-03'}"></i>
+                                                                        <i th:class="${sortField=='firstName' and sortDir=='desc'?'icofont icofont-arrow-down opacity-1':'icofont icofont-arrow-down opacity-03'}"></i>
+                                                                    </div>
+                                                                </a>
+                                                            </th>
+                                                            <th>
+                                                                <a th:href="@{'/admins/page/'+${currentPage}+'/size/'+${currentSize}+'?sortField=firstName&sortDir='+${sortField=='firstName'?reverseSortDir:sortDir} }">
+                                                                    E-mail
+                                                                    <div class="pagination-page-dir-wrapper">
+                                                                        <i th:class="${sortField=='email' and sortDir=='asc'?'icofont icofont-arrow-up opacity-1':'icofont icofont-arrow-up opacity-03'}"></i>
+                                                                        <i th:class="${sortField=='email' and sortDir=='desc'?'icofont icofont-arrow-down opacity-1':'icofont icofont-arrow-down opacity-03'}"></i>
+                                                                    </div>
+                                                                </a>
+                                                            </th>
+                                                            <th>
+                                                                <a th:href="@{'/admins/page/'+${currentPage}+'/size/'+${currentSize}+'?sortField=email&sortDir='+${sortField=='email'?reverseSortDir:sortDir} }">
+                                                                    Password
+                                                                    <div class="pagination-page-dir-wrapper">
+                                                                        <i th:class="${sortField=='password' and sortDir=='asc'?'icofont icofont-arrow-up opacity-1':'icofont icofont-arrow-up opacity-03'}"></i>
+                                                                        <i th:class="${sortField=='password' and sortDir=='desc'?'icofont icofont-arrow-down opacity-1':'icofont icofont-arrow-down opacity-03'}"></i>
+                                                                    </div>
+                                                                </a>
+                                                            </th>
+                                                            <th>
+                                                                <a th:href="@{'/admins/page/'+${currentPage}+'/size/'+${currentSize}+'?sortField=createdAt&sortDir='+${sortField=='createdAt'?reverseSortDir:sortDir}}">
+                                                                    Enabled
+                                                                    <div class="pagination-page-dir-wrapper">
+                                                                        <i th:class="${sortField=='createdAt' and sortDir=='asc'?'icofont icofont-arrow-up opacity-1':'icofont icofont-arrow-up opacity-03'}"></i>
+                                                                        <i th:class="${sortField=='createdAt' and sortDir=='desc'?'icofont icofont-arrow-down opacity-1':'icofont icofont-arrow-down opacity-03'}"></i>
+                                                                    </div>
+                                                                </a></th>
+                                                            <th class="w-px-100">Actions</th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        <tr th:each="admin: ${admins}">
+                                                            <th scope="row">[[${admin.id}]]</th>
+                                                            <td>[[${admin.firstName}]]</td>
+                                                            <td>[[${admin.lastName}]]</td>
+                                                            <td>[[${admin.userName}]]</td>
+                                                            <td>[[${admin.email}]]</td>
+                                                            <td>[[${admin.password}]]</td>
+                                                            <td><input  th:adminId="${admin.id}" type="checkbox" class="enabled"
+                                                                       th:checked="${admin.enabled}">
+                                                            </td>
+                                                            <td>
+                                                                <a th:href="@{'/admins/update/'+${admin.id}}"><i
+                                                                        class="icofont icofont-edit icofont-lg"></i></a>
+                                                                <a href="javascript:void(0)"
+                                                                   th:adminId="${admin.id}"
+                                                                   onclick="deleteRow(this)">
+                                                                    <i class="icofont icofont-ui-delete icofont-lg"></i>
+                                                                </a>
+
+                                                            </td>
+                                                        </tr>
+
+                                                        </tbody>
+                                                    </table>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </div>
+                                        <div class="row">
+                                            <div class="col-xs-12 col-sm-12 col-md-5">
+                                                <div> Showing [[${startCount}]] to [[${endCount}]] of
+                                                    [[${totalCount}]] entiries
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 col-sm-12 col-md-7">
+                                                <div class="dataTables_paginate">
+                                                    <ul class="pagination">
+                                                        <li th:class="${currentPage>1?'page-item':'page-item disabled'}">
+                                                            <a th:href="@{'/admins/page/'+${currentPage-1}+'/size/'+${currentSize}+'?sortField='+${sortField}+'&sortDir=' +${sortDir}}"
+                                                               class="page-link">Previous</a>
+                                                        </li>
+                                                        <li th:class="${i==currentPage?'page-item active':'page-item'}"
+                                                            th:each="i: ${#numbers.sequence(1,totalPages)}">
+                                                            <a th:href="@{'/admins/page/'+${i}+'/size/'+${currentSize}+'?sortField='+${sortField}+'&sortDir=' +${sortDir}}"
+                                                               class="page-link">[[${i}]]</a>
+                                                        </li>
 
+                                                        <li th:class="${currentPage<totalPages?'page-item':'page-item disabled'}">
+                                                            <a th:href="@{'/admins/page/'+${currentPage+1}+'/size/'+${currentSize}+'?sortField='+${sortField}+'&sortDir=' +${sortDir}}"
+                                                               class="page-link">Next</a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -109,6 +197,7 @@
             </div>
         </div>
     </div>
+</div>
 
 </body>
 <div th:replace="fragments/footer::footer"></div>
@@ -145,6 +234,31 @@
 
             });
     }
+
+    $(document).ready(function () {
+        $('#page-size-select').change(function () {
+            document.location = "[[@{/admins/page/}]][[${currentPage}]]/size/" + $(this).val() + '?sortField=[[${sortField}]]&sortDir=[[${sortDir}]]';
+            console.log($(this).val());
+        });
+    });
+</script>
+<script>
+
+    $(document).ready(function () {
+
+        $('body').on('change', ".enabled", function () {
+            console.log($(this).prop('checked'))
+            console.log($(this).attr('adminId'))
+            $.ajax({
+                'url': '[[@{/admins/}]]'+ $(this).attr('adminId')+'/enabled/'+ $(this).prop('checked'),
+                'type': 'GET',
+                'error': function (request, error) {
+                    console.log( "Something went wrong");
+                }
+            });
+        })
+
+    });
 </script>
 
 </html>

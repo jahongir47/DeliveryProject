@@ -29,35 +29,42 @@
                                             <i class="icofont icofont-plus m-r-5"></i>Add Region
                                         </a>
                                     </div>
-                                    <div class="card-block ">
-                                        <div class="table-responsive">
-                                            <div class="row">
-                                                <div class="col-xs-12 col-sm-12 col-sm-12 col-md-6">
-                                                    <div class="pagination-page-size-wrapper">
-                                                        <label>Show <select id="page-size-select"
-                                                                            class="form-control input-sm">
-                                                            <option th:selected="${currentSize==10? true:false}" value="10">
-                                                                10
-                                                            </option>
-                                                            <option th:selected="${currentSize==25? true:true}" value="25">
-                                                                25
-                                                            </option>
-                                                            <option th:selected="${currentSize==50? true:true}" value="50">
-                                                                50
-                                                            </option>
-                                                            <option th:selected="${currentSize==100?true:true}" value="100">
-                                                                100
-                                                            </option>
-                                                        </select> entries</label>
-                                                    </div>
-                                                </div>
-                                                <div class="col-xs-12 col-sm-12">
-                                                    <table class="table table-hover table-bordered table-striped">
+                                    <div class="card-block">
+                                        <div th:replace="fragments/fragments::pagination_header(${currentSize}, ${keyword})"></div>
+                                        <div class="row">
+                                            <div class="col-xs-12 col-sm-12">
+                                                <div class="table-responsive">
+                                                    <table class="table table-hover table-bordered table-striped pagination-table">
                                                         <thead>
                                                         <tr>
-                                                            <th class="w-px-80">#</th>
-                                                            <th>Name</th>
-                                                            <th>Created At</th>
+                                                            <th class="w-px-80">
+                                                                <a th:href="@{'/regions/page/'+${currentPage}+'/size/'+${currentSize}+'?sortField=id&sortDir=' +${sortField=='id'?reverseSortDir:sortDir}}">
+                                                                    ID
+                                                                    <div class="pagination-page-dir-wrapper">
+                                                                        <i th:class="${sortField=='id' and sortDir=='asc' ? 'icofont icofont-arrow-up opacity-1':'icofont icofont-arrow-up opacity-03'}"></i>
+                                                                        <i th:class="${sortField=='id' and sortDir=='desc' ? 'icofont icofont-arrow-down opacity-1':'icofont icofont-arrow-down opacity-03'}"></i>
+                                                                    </div>
+                                                                </a>
+                                                            </th>
+                                                            <th>
+                                                                <a th:href="@{'/regions/page/'+${currentPage}+'/size/'+${currentSize}+'?sortField=name&sortDir='+${sortField=='name'?reverseSortDir:sortDir} }">
+                                                                    Name
+                                                                    <div class="pagination-page-dir-wrapper">
+                                                                        <i th:class="${sortField=='name' and sortDir=='asc'?'icofont icofont-arrow-up opacity-1':'icofont icofont-arrow-up opacity-03'}"></i>
+                                                                        <i th:class="${sortField=='name' and sortDir=='desc'?'icofont icofont-arrow-down opacity-1':'icofont icofont-arrow-down opacity-03'}"></i>
+                                                                    </div>
+                                                                </a>
+                                                            </th>
+                                                            </th>
+                                                            <th>
+                                                                <a th:href="@{'/regions/page/'+${currentPage}+'/size/'+${currentSize}+'?sortField=createdAt&sortDir='+${sortField=='createdAt'?reverseSortDir:sortDir}}">
+                                                                    Created At
+                                                                    <div class="pagination-page-dir-wrapper">
+                                                                        <i th:class="${sortField=='createdAt' and sortDir=='asc'?'icofont icofont-arrow-up opacity-1':'icofont icofont-arrow-up opacity-03'}"></i>
+                                                                        <i th:class="${sortField=='createdAt' and sortDir=='desc'?'icofont icofont-arrow-down opacity-1':'icofont icofont-arrow-down opacity-03'}"></i>
+                                                                    </div>
+                                                                </a></th>
+                                                            </th>
                                                             <th class="w-px-100">Actions</th>
                                                         </tr>
                                                         </thead>
@@ -82,36 +89,35 @@
                                                     </table>
                                                 </div>
                                             </div>
-                                            <div class="row">
-                                                <div class="col-xs-12 col-sm-12 col-md-5">
-                                                    <div> Showing [[${startCount}]] to [[${endCount}]] of
-                                                        [[${totalCount}]] entiries
-                                                    </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-xs-12 col-sm-12 col-md-5">
+                                                <div> Showing [[${startCount}]] to [[${endCount}]] of
+                                                    [[${totalCount}]] entiries
                                                 </div>
-                                                <div class="col-xs-12 col-sm-12 col-md-7">
-                                                    <div class="dataTables_paginate">
-                                                        <ul class="pagination">
-                                                            <li class=" page-item previous ">
-                                                                <a href="#" class="page-link">Previous</a>
-                                                            </li>
-                                                            <li class="paginate_button page-item active">
-                                                                <a href="#" aria-controls="don-jqry" data-dt-idx="1"
-                                                                   tabindex="0" class="page-link">1</a>
-                                                            </li>
-                                                            <li class="paginate_button page_item ">
-                                                                <a href="#" aria-controls="don-jqry" data-dt-idx="2"
-                                                                   tabindex="0" class="page-link">2</a>
-                                                            </li>
-                                                            <li class="paginate_button page_item next">
-                                                                <a href="#" aria-controls="don-jqry_next"
-                                                                   data-dt-idx="3" tabindex="0"
-                                                                   class="page-link">Next</a>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
+                                            </div>
+                                            <div class="col-xs-12 col-sm-12 col-md-7">
+                                                <div class="dataTables_paginate">
+                                                    <ul class="pagination">
+                                                        <li th:class="${currentPage>1?'page-item':'page-item disabled'}">
+                                                            <a th:href="@{'/permissions/page/'+${currentPage-1}+'/size/'+${currentSize}+'?sortField='+${sortField}+'&sortDir=' +${sortDir}+'&keyword=' +${keyword!=null ? '&keyword='+keyword:''}}"
+                                                               class="page-link">Previous</a>
+                                                        </li>
+                                                        <li th:class="${i==currentPage?'page-item active':'page-item'}"
+                                                            th:each="i: ${#numbers.sequence(1,totalPages)}">
+                                                            <a th:href="@{'/permissions/page/'+${i}+'/size/'+${currentSize}+'?sortField='+${sortField}+'&sortDir=' +${sortDir}+'&keyword=' +${keyword!=null ? '&keyword='+keyword:''}}"
+                                                               class="page-link">[[${i}]]</a>
+                                                        </li>
+
+                                                        <li th:class="${currentPage<totalPages?'page-item':'page-item disabled'}">
+                                                            <a th:href="@{'/permissions/page/'+${currentPage+1}+'/size/'+${currentSize}+'?sortField='+${sortField}+'&sortDir=' +${sortDir}+'&keyword=' +${keyword!=null ? '&keyword='+keyword:''}}"
+                                                               class="page-link">Next</a>
+                                                        </li>
+                                                    </ul>
                                                 </div>
                                             </div>
                                         </div>
+
                                     </div>
                                 </div>
                             </div>
@@ -158,6 +164,17 @@
 
             });
     }
+    $(document).ready(function () {
+        $('#page-size-select').change(function () {
+            document.location = "[[@{/regions/page/}]][[${currentPage}]]/size/" + $(this).val() + "?sortField=[[${sortField}]]&sortDir=[[${sortDir}]]&sortDir=[[${sortDir}]]&keyword=[[${keyword}]]";
+            console.log($(this).val());
+        });
+
+        $('body').on('click', "#search-btn", function () {
+            console.log($('#search-input').val())
+            document.location = "[[@{/regions/page/}]][[${currentPage}]]/size/[[${currentSize}]]?sortField=[[${sortField}]]&sortDir=[[${sortDir}]]&keyword=" + $('#search-input').val();
+        })
+    });
 </script>
 
 </html>

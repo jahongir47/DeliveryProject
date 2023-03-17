@@ -4,10 +4,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import uz.jahongir.library.repositories.RegionRepository;
 import uz.jahongir.admin.services.RegionService;
 import uz.jahongir.library.entities.Region;
+import uz.jahongir.library.repositories.RegionRepository;
 
 import java.util.List;
 
@@ -29,9 +30,11 @@ public class RegionServiceImpl implements RegionService {
     }
 
     @Override
-    public Page<Region> findAllByPage(int pageNum) {
-        Pageable pageable= PageRequest.of(pageNum-1,PAGE_SIZE);
-        Page<Region> page = regionRepository.findAll(pageable);
+    public Page<Region> findAllByPage(int pageNum, int pageSize, String sortField, String sortDir, String keyword) {
+        Sort sort = Sort.by(sortField);
+        sort = sortDir.equals("asc") ? sort.ascending() : sort.descending();
+        Pageable pageable = PageRequest.of(pageNum - 1, pageSize, sort);
+        Page<Region> page =keyword!= null ? regionRepository.findAll(keyword, pageable) : regionRepository.findAll(pageable);
         return page;
     }
 

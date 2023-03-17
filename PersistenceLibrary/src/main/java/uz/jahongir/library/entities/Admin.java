@@ -32,6 +32,7 @@ public class Admin {
     private String userName;
 
     @NotNull(message = "This field is required")
+    @Column(unique = true)
     @Email(message = "You should be e-mail")
     private String email;
 
@@ -39,7 +40,7 @@ public class Admin {
     @Size(min = 4,message = "Password should be at least 4 characters")
     private String password;
 
-    private Boolean enabled=false;
+    private Boolean enabled;
     private String image;
 
 }

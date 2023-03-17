@@ -22,20 +22,30 @@ public class AdminController {
 
     @GetMapping
     public String list(Model model) {
-        return listByPage(1, model);
+        return listByPage(1,10,"firstName","asc", model);
     }
 
-    @GetMapping("/page/{pageNum}")
-    public String listByPage(@PathVariable int pageNum, Model model){
-        Page<Admin> page=adminService.findAllByPage(pageNum);
-        long startCount=(pageNum-1)* 10+1;
-        long endCount=startCount+10-1;
+    @GetMapping("/page/{pageNum}/size/{pageSize}")
+    public String listByPage(@PathVariable int pageNum,
+                             @PathVariable int pageSize,
+                             @RequestParam String sortField,
+                             @RequestParam String sortDir,
+                             Model model){
+        Page<Admin> page=adminService.findAllByPage(pageNum,pageSize,sortField,sortDir);
+        long startCount=(pageNum-1)*pageSize+1;
+        long endCount=startCount+pageSize-1;
         long totalCount=page.getTotalElements();
         if (endCount>totalCount)endCount=totalCount;
         model.addAttribute( "admins", page);
         model.addAttribute("startCount",startCount);
         model.addAttribute("endCount",endCount);
         model.addAttribute("totalCount",totalCount);
+        model.addAttribute("totalPages",page.getTotalPages());
+        model.addAttribute("currentPage", pageNum);
+        model.addAttribute("currentSize", pageSize);
+        model.addAttribute("sortField", sortField);
+        model.addAttribute("sortDir", sortDir);
+        model.addAttribute("reverseSortDir", sortDir.equals("asc") ? "desc":"asc");
         return "admins/list";
     }
 
@@ -64,10 +74,18 @@ public class AdminController {
             return "admins/form";
 
         }
-        System.out.println("1");
         adminService.save(admin);
-        System.out.println("2");
         return "redirect:/admins";
+    }
+
+
+    @GetMapping("/{id}/enabled/{status}")
+    @ResponseBody
+    public Boolean changeEnabledStatus(@PathVariable Long id, @PathVariable boolean status){
+        System.out.println(status);
+        System.out.println(id);
+        adminService.changeEnabledStatus(id,status);
+        return true;
     }
 
 
