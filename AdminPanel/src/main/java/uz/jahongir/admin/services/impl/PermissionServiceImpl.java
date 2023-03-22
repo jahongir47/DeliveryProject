@@ -10,10 +10,7 @@ import uz.jahongir.admin.services.PermissionService;
 import uz.jahongir.library.entities.Permission;
 import uz.jahongir.library.repositories.PermissionRepository;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -32,13 +29,33 @@ public class PermissionServiceImpl implements PermissionService {
     }
 
     @Override
-    public Map<String, Object> findAll(Integer start, Integer length) {
-        Pageable pageable = PageRequest.of(start/length, length);
-        Page<Permission> page = permissionRepository.findAll(pageable);
+    public Map<String, Object> findAll(Map<String, Object> params) {
+
+        Integer start = Integer.valueOf((String) params.get("start"));
+        Integer length = Integer.valueOf((String) params.get("length"));
+
+        Integer columnIndex = Integer.valueOf((String) params.get("order[0][column]"));
+        String filedNameKey = "columns[" + columnIndex + "][name]";
+        String fieldName = (String) params.get(filedNameKey);
+        String direction = (String) params.get("order[0][dir]");
+
+        String keyword=(String) params.get("search[value]");
+
+        Sort sort = Sort.by(Sort.Direction.valueOf(direction.toUpperCase()), fieldName);
+        Pageable pageable = PageRequest.of(start / length, length, sort);
+        Page<Permission> page = permissionRepository.findAll(keyword, pageable);
         Map<String, Object> result = new HashMap<>();
+        List<Permission> list = page.getContent();
         result.put("recordsTotal", page.getTotalElements());
         result.put("recordsFiltered", page.getTotalElements());
-      result.put("data", page.getContent());
+        List<Object[]> objects = new ArrayList<>(list.size());
+        list.forEach(permission ->
+                objects.add(new Object[]{
+                        permission.getId(),
+                        permission.getName(),
+                        permission.getCreatedAt(),
+                }));
+        result.put("data", objects);
         return result;
     }
 
