@@ -27,7 +27,7 @@ public class PermissionController {
 
     @GetMapping("/ajax")
     @ResponseBody
-    public DatatableOutput listAjax(@RequestParam Map<String, Object> params, Model model) {
+    public DatatableOutput<Permission> listAjax(@RequestParam Map<String, Object> params, Model model) {
         System.out.println("++++Keldi++");
         Integer start=Integer.valueOf((String) params.get("start"));
         Integer length=Integer.valueOf((String)params.get("length"));
