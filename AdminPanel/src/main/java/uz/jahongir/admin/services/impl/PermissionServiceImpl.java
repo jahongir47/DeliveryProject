@@ -36,19 +36,9 @@ public class PermissionServiceImpl implements PermissionService {
         Pageable pageable = PageRequest.of(start/length, length);
         Page<Permission> page = permissionRepository.findAll(pageable);
         Map<String, Object> result = new HashMap<>();
-        List<Permission> list = page.getContent();
         result.put("recordsTotal", page.getTotalElements());
         result.put("recordsFiltered", page.getTotalElements());
-        List<Object[]> objects = new ArrayList<>(list.size());
-
-        list.forEach(p -> {
-                    Object[] array = {
-                            p.getId(), p.getName(), p.getCreatedAt()};
-
-                    objects.add(array);
-                }
-        );
-        result.put("data", objects);
+      result.put("data", page.getContent());
         return result;
     }
 
