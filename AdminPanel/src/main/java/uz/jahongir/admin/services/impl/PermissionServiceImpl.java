@@ -10,7 +10,10 @@ import uz.jahongir.admin.services.PermissionService;
 import uz.jahongir.library.entities.Permission;
 import uz.jahongir.library.repositories.PermissionRepository;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -29,12 +32,33 @@ public class PermissionServiceImpl implements PermissionService {
     }
 
     @Override
+    public Map<String, Object> findAll(Integer start, Integer length) {
+        Pageable pageable = PageRequest.of(start/length, length);
+        Page<Permission> page = permissionRepository.findAll(pageable);
+        Map<String, Object> result = new HashMap<>();
+        List<Permission> list = page.getContent();
+        result.put("recordsTotal", page.getTotalElements());
+        result.put("recordsFiltered", page.getTotalElements());
+        List<Object[]> objects = new ArrayList<>(list.size());
+
+        list.forEach(p -> {
+                    Object[] array = {
+                            p.getId(), p.getName(), p.getCreatedAt()};
+
+                    objects.add(array);
+                }
+        );
+        result.put("data", objects);
+        return result;
+    }
+
+    @Override
     public Page<Permission> findAllByPage(int pageNum, int pageSize, String sortField, String sortDir, String keyword) {
 
         Sort sort = Sort.by(sortField);
         sort = sortDir.equals("asc") ? sort.ascending() : sort.descending();
         Pageable pageable = PageRequest.of(pageNum - 1, pageSize, sort);
-        Page<Permission> page =keyword!=null?permissionRepository.findAll(keyword, pageable): permissionRepository.findAll(pageable);
+        Page<Permission> page = keyword != null ? permissionRepository.findAll(keyword, pageable) : permissionRepository.findAll(pageable);
         return page;
     }
 

@@ -10,6 +10,7 @@ import uz.jahongir.admin.services.PermissionService;
 import uz.jahongir.library.entities.Permission;
 
 import javax.validation.Valid;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/permissions")
@@ -19,8 +20,17 @@ public class PermissionController {
     private final PermissionService permissionService;
 
     @GetMapping
-    public String list(Model model) {
-        return listByPage(1,10,"name","asc",null, model);
+    public String list() {
+        return "permissions/list2";
+    }
+
+    @GetMapping("/ajax")
+    @ResponseBody
+    public  Map<String, Object> listAjax(@RequestParam Map<String, Object> params, Model model) {
+        System.out.println("++++Keldi++");
+        Integer start=Integer.valueOf((String) params.get("start"));
+        Integer length=Integer.valueOf((String)params.get("length"));
+        return permissionService.findAll(start, length);
     }
 
     @GetMapping("/page/{pageNum}/size/{pageSize}")
