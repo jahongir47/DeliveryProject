@@ -6,14 +6,17 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
+import uz.jahongir.admin.dto.DatatableOutput;
 import uz.jahongir.admin.services.PermissionService;
 import uz.jahongir.admin.services.PlaceService;
 import uz.jahongir.admin.services.RegionService;
+import uz.jahongir.library.entities.Permission;
 import uz.jahongir.library.entities.Place;
 import uz.jahongir.library.entities.Region;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/places")
@@ -24,9 +27,18 @@ public class PlaceController {
   private final RegionService regionService;
 
     @GetMapping
-    public String list(Model model) {
-        return listByPage(1,10,"name","asc",null, model);
+    public String list() {
+        return "places/list2P";
     }
+
+    @GetMapping("/ajax")
+    @ResponseBody
+    public DatatableOutput<Place> listAjax(@RequestParam Map<String, Object> params, Model model) {
+        Integer start=Integer.valueOf((String) params.get("start"));
+        Integer length=Integer.valueOf((String)params.get("length"));
+        return placeService.findAll(start, length);
+    }
+
     @GetMapping("/page/{pageNum}/size/{pageSize}")
     public String listByPage(@PathVariable int pageNum,
                              @PathVariable int pageSize,

@@ -6,7 +6,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import uz.jahongir.admin.dto.DatatableOutput;
 import uz.jahongir.admin.services.RegionService;
+import uz.jahongir.library.entities.Permission;
 import uz.jahongir.library.entities.Region;
 import uz.jahongir.library.repositories.RegionRepository;
 
@@ -27,6 +29,14 @@ public class RegionServiceImpl implements RegionService {
     @Override
     public List<Region> findAll() {
         return (List<Region>) regionRepository.findAll();
+    }
+
+    @Override
+    public DatatableOutput<Region> findAll(Integer start, Integer length) {
+        Pageable pageable = PageRequest.of(start/length, length);
+        Page<Region> page = regionRepository.findAll(pageable);
+        return new DatatableOutput<>(page.getTotalElements(), page.getTotalElements(), page.getContent());
+
     }
 
     @Override

@@ -6,9 +6,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import uz.jahongir.admin.dto.DatatableOutput;
 import uz.jahongir.admin.services.PlaceService;
 import uz.jahongir.library.entities.Permission;
 import uz.jahongir.library.entities.Place;
+import uz.jahongir.library.entities.Region;
 import uz.jahongir.library.repositories.PermissionRepository;
 import uz.jahongir.library.repositories.PlaceRepository;
 
@@ -41,6 +43,14 @@ public class PlaceServiceImpl implements PlaceService {
     @Override
     public Optional<Place> findById(Long id) {
         return placeRepository.findById(id);
+    }
+
+    @Override
+    public DatatableOutput<Place> findAll(Integer start, Integer length) {
+        Pageable pageable = PageRequest.of(start/length, length);
+        Page<Place> page = placeRepository.findAll(pageable);
+        return new DatatableOutput<>(page.getTotalElements(), page.getTotalElements(), page.getContent());
+
     }
 
     @Override

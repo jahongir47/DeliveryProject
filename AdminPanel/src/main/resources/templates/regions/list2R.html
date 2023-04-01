@@ -28,7 +28,7 @@
                                             <!-- Zero config.table start -->
                                             <div class="card">
                                                 <div class="card-header">
-                                                    <h5>Permission Table</h5>
+                                                    <h5>Region Table</h5>
                                                 </div>
                                                 <div class="card-block">
                                                     <div class="dt-responsive table-responsive">
@@ -44,10 +44,10 @@
                                                             </tr>
                                                             </thead>
                                                             <tbody>
-                                                            <tr th:each="permission: ${permissions}">
-                                                                <th scope="row">[[${permission.id}]]</th>
-                                                                <td>[[${permission.name}]]</td>
-                                                                <td>[[${permission.createdAt}]]</td>
+                                                            <tr th:each="region: ${regions}">
+                                                                <th scope="row">[[${region.id}]]</th>
+                                                                <td>[[${region.name}]]</td>
+                                                                <td>[[${region.createdAt}]]</td>
                                                                 <td>
 
                                                                 </td>
@@ -87,7 +87,7 @@
 <script>
     function deleteRow(e) {
         var button = $(e);
-        var placeId = button.attr('placeId');
+        var regionId = button.attr('regionId');
         swal({
                 title: "Are you sure",
                 text: "Your will not be able to recover this element",
@@ -101,7 +101,7 @@
 
                 if (value) {
                     $.ajax({
-                        'url': '/admin/permissions/delete/' + placeId,
+                        'url': '/admin/regions/delete/' + regionId,
                         'type': 'GET',
                         'success': function (data) {
                             swal("Deleted", "Your imaginary file has been deleted.", "success");
@@ -122,15 +122,15 @@
         $('#datatable').DataTable({
             processing: true,
             serverSide: true,
-            ajax: '[[@{/permissions/ajax}]]',
+            ajax: '[[@{/regions/ajax}]]',
             columns: [
                 {data: "id", width: "5%"},
                 {data: "name", className: "text-center"},
                 {data: "createdAt"},
                 {
                     data: "id", width: "5%", render: function (data, type, row, meta) {
-                        return ' <a href="[[@{/permissions/update/ }]]' + data + '"><i class="icofont icofont-edit icofont-lg"></i></a>\n' +
-                            '                                                                    <a href="javascript:void(0)" placeId="' + data + '"  onclick="deleteRow(this)"> <i class="icofont icofont-ui-delete icofont-lg"></i>\n' +
+                        return ' <a href="[[@{/regions/update/ }]]' + data + '"><i class="icofont icofont-edit icofont-lg"></i></a>\n' +
+                            '                                                                    <a href="javascript:void(0)" regionId="' + data + '"  onclick="deleteRow(this)"> <i class="icofont icofont-ui-delete icofont-lg"></i>\n' +
                             '                                                                    </a>';
                     }
                 },

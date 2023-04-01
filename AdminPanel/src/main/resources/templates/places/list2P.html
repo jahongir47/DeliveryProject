@@ -28,7 +28,7 @@
                                             <!-- Zero config.table start -->
                                             <div class="card">
                                                 <div class="card-header">
-                                                    <h5>Permission Table</h5>
+                                                    <h5>Places Table</h5>
                                                 </div>
                                                 <div class="card-block">
                                                     <div class="dt-responsive table-responsive">
@@ -38,16 +38,18 @@
                                                             <tr>
                                                                 <th>Id</th>
                                                                 <th>Name</th>
+                                                                <th>Region Name</th>
                                                                 <th>Created At</th>
                                                                 <th>Action</th>
 
                                                             </tr>
                                                             </thead>
                                                             <tbody>
-                                                            <tr th:each="permission: ${permissions}">
-                                                                <th scope="row">[[${permission.id}]]</th>
-                                                                <td>[[${permission.name}]]</td>
-                                                                <td>[[${permission.createdAt}]]</td>
+                                                            <tr th:each="place: ${places}">
+                                                                <th scope="row">[[${place.id}]]</th>
+                                                                <td>[[${place.name}]]</td>
+                                                                <td>[[${place.region.name}]]</td>
+                                                                <td>[[${place.createdAt}]]</td>
                                                                 <td>
 
                                                                 </td>
@@ -101,7 +103,7 @@
 
                 if (value) {
                     $.ajax({
-                        'url': '/admin/permissions/delete/' + placeId,
+                        'url': '/admin/places/delete/' + placeId,
                         'type': 'GET',
                         'success': function (data) {
                             swal("Deleted", "Your imaginary file has been deleted.", "success");
@@ -122,14 +124,14 @@
         $('#datatable').DataTable({
             processing: true,
             serverSide: true,
-            ajax: '[[@{/permissions/ajax}]]',
+            ajax: '[[@{/places/ajax}]]',
             columns: [
                 {data: "id", width: "5%"},
                 {data: "name", className: "text-center"},
                 {data: "createdAt"},
                 {
                     data: "id", width: "5%", render: function (data, type, row, meta) {
-                        return ' <a href="[[@{/permissions/update/ }]]' + data + '"><i class="icofont icofont-edit icofont-lg"></i></a>\n' +
+                        return ' <a href="[[@{/places/update/ }]]' + data + '"><i class="icofont icofont-edit icofont-lg"></i></a>\n' +
                             '                                                                    <a href="javascript:void(0)" placeId="' + data + '"  onclick="deleteRow(this)"> <i class="icofont icofont-ui-delete icofont-lg"></i>\n' +
                             '                                                                    </a>';
                     }

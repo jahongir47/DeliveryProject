@@ -6,10 +6,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
+import uz.jahongir.admin.dto.DatatableOutput;
 import uz.jahongir.admin.services.RegionService;
+import uz.jahongir.library.entities.Permission;
 import uz.jahongir.library.entities.Region;
 
 import javax.validation.Valid;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/regions")
@@ -19,9 +22,18 @@ public class RegionController {
     private final RegionService regionService;
 
     @GetMapping
-    public String list(Model model) {
-        return listByPage(1, 10,"name","asc",null, model);
+    public String list() {
+        return "regions/list2R";
     }
+    @GetMapping("/ajax")
+    @ResponseBody
+    public DatatableOutput<Region> listAjax(@RequestParam Map<String, Object> params, Model model) {
+        System.out.println("++++Keldi++");
+        Integer start=Integer.valueOf((String) params.get("start"));
+        Integer length=Integer.valueOf((String)params.get("length"));
+        return regionService.findAll(start, length);
+    }
+
 
     @GetMapping("/page/{pageNum}/size/{pageSize}")
     public String listByPage(@PathVariable int pageNum,
